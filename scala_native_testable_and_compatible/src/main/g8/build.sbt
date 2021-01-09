@@ -1,24 +1,75 @@
 // give the user a nice default project!
-ThisBuild / organization := "com.example"
-ThisBuild / scalaVersion := "2.13.4"
 
-lazy val root = (project in file(".")).settings(
-  name := "scala_native_testable_and_compatible"
+lazy val scala211 = "2.11.12"
+lazy val scala212 = "2.12.8"
+lazy val scala213 = "2.13.4"
+
+val versionsJVM = Seq(scala211, scala212, scala213)
+val versionsNative = Seq(scala211)
+
+inThisBuild(
+  List(
+    scalaVersion := scala213
+    // scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3"
+  )
 )
 
+lazy val commonSettings = Seq()
+
+lazy val commonDependencies = Seq(
+  libraryDependencies += "org.scala-lang.modules" %%% "scala-collection-compat" % "2.2.0",
+  libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.2" % Test
+)
+
+lazy val commonSettingsAndDependencies = commonSettings ++ commonDependencies
+
+lazy val scalaNativeSettings = Seq(
+  crossScalaVersions := versionsNative,
+  scalaVersion := scala211, // allows to compile if scalaVersion set not 2.11
+  nativeLinkStubs := true,
+  nativeLinkStubs in runMain := true,
+  nativeLinkStubs in Test := true,
+  Test / nativeLinkStubs := true,
+  sources in (Compile, doc) := Seq.empty
+)
+
+lazy val crossProj: sbtcrossproject.CrossProject =
+  crossProject(JVMPlatform, NativePlatform)
+    .crossType(CrossType.Pure)
+    .in(file("."))
+    .settings(
+      name := "scala_native_testable_and_compatible"
+    )
+    .settings(commonSettingsAndDependencies)
+    .jvmSettings(
+      crossScalaVersions := versionsJVM
+    )
+    .nativeSettings(
+      scalaNativeSettings
+    )
+
+lazy val crossProjectJVM: sbt.Project =
+  crossProj.jvm
+
+lazy val crossProjectNative: sbt.Project =
+  crossProj.native
+
+lazy val root: sbt.Project = (project in file("."))
+  .settings(
+    publish / skip := true,
+    doc / aggregate := false,
+    crossScalaVersions := Nil,
+    packageDoc / aggregate := false
+  )
+  .aggregate(
+    crossProjectJVM,
+    crossProjectNative
+  )
+
 // <https://github.com/scala-native/scala-native.g8> --- {{{
-
-scalaVersion := "2.11.12"
-
-// Set to false or remove if you want to show stubs as linking errors
-nativeLinkStubs := true
-
-enablePlugins(ScalaNativePlugin)
 
 // --- }}}
 
 // <scala/scalatest-example.g8> --- {{{
-
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.2" % Test
 
 // --- }}}
