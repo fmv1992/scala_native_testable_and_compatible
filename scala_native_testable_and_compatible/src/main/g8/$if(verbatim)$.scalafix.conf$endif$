@@ -1,0 +1,14 @@
+// https://scalacenter.github.io/scalafix/docs/users/configuration.html
+//
+//
+rules = [
+    DisableSyntax,
+    ExplicitResultTypes,
+    LeakingImplicitClassVal,
+    NoAutoTupling,
+    NoValInForComprehension,
+    ProcedureSyntax,
+    RemoveUnused,
+    // https://github.com/liancheng/scalafix-organize-imports/
+    OrganizeImports,
+]

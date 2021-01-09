@@ -9,12 +9,31 @@ val versionsNative = Seq(scala211)
 
 inThisBuild(
   List(
-    scalaVersion := scala213
-    // scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3"
+    scalaVersion := scala213,
+    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3",
+    scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(
+      scalaVersion.value
+    ),
+    semanticdbEnabled := true, // enable SemanticDB
+    semanticdbVersion := scalafixSemanticdb.revision // use Scalafix compatible version
   )
 )
 
-lazy val commonSettings = Seq()
+lazy val commonSettings = Seq(
+  scalacOptions ++= (Seq("-feature", "-deprecation")
+    ++
+      Seq(
+        "-P:semanticdb:synthetics:on",
+        "-Yrangepos",
+        "-Ywarn-dead-code",
+        "-deprecation",
+        "-feature",
+        "-Wunused"
+        // "-Xfatal-warnings",
+        // "-Ywarn-unuse"
+      )
+      ++ sys.env.get("SCALAC_OPTS").getOrElse("").split(" ").toSeq)
+)
 
 lazy val commonDependencies = Seq(
   libraryDependencies += "org.scala-lang.modules" %%% "scala-collection-compat" % "2.2.0",
