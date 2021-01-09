@@ -2,7 +2,7 @@
 
 lazy val scala211 = "2.11.12"
 lazy val scala212 = "2.12.8"
-lazy val scala213 = "2.13.4"
+lazy val scala213 = "2.13.3"
 
 val versionsJVM = Seq(scala211, scala212, scala213)
 val versionsNative = Seq(scala211)
@@ -11,11 +11,17 @@ inThisBuild(
   List(
     scalaVersion := scala213,
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3",
+    libraryDependencies += "com.sandinh" %% "scala-rewrites" % "0.1.10-sd",
     scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(
       scalaVersion.value
     ),
-    semanticdbEnabled := true, // enable SemanticDB
-    semanticdbVersion := scalafixSemanticdb.revision // use Scalafix compatible version
+    // https://index.scala-lang.org/ohze/scala-rewrites/scala-rewrites/0.1.10-sd?target=_2.13
+    semanticdbEnabled := true,
+    semanticdbOptions += "-P:semanticdb:synthetics:on", // make sure to add this
+    semanticdbVersion := scalafixSemanticdb.revision,
+    scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(
+      scalaVersion.value
+    )
   )
 )
 
@@ -30,7 +36,7 @@ lazy val commonSettings = Seq(
         "-feature",
         "-Wunused"
         // "-Xfatal-warnings",
-        // "-Ywarn-unuse"
+        // "-Ywarn-unused"
       )
       ++ sys.env.get("SCALAC_OPTS").getOrElse("").split(" ").toSeq)
 )
