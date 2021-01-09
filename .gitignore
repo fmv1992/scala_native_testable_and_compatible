@@ -1,5 +1,37 @@
+# Ignore everything
+*
+
+# But not these files...
+!*.conf
+!*.md
+!*.properties
+!*.py
+!*.sbt
+!*.scala
+!*.sh
+!*.txt
+!*.vim
+!.gitignore
+!.gitkeep
+!.properties
+!.sbt
+!makefile
+!version
+# etc...
+
+# ...even if they are in subdirectories
+!*/
+
+# But do ignore these directories:
+tmp/
+target/
+
+# And these files:
+metals.sbt
 ./scala_native_testable_and_compatible/boot/
 ./scala_native_testable_and_compatible/lib_managed/
 ./scala_native_testable_and_compatible/project/plugins/project/
 ./scala_native_testable_and_compatible/src_managed/
 ./scala_native_testable_and_compatible/target/
+
+# vim: set fileformat=unix filetype=conf wrap :
