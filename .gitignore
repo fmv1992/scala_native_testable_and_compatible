@@ -1,0 +1,5 @@
+./scala_native_testable_and_compatible/boot/
+./scala_native_testable_and_compatible/lib_managed/
+./scala_native_testable_and_compatible/project/plugins/project/
+./scala_native_testable_and_compatible/src_managed/
+./scala_native_testable_and_compatible/target/
