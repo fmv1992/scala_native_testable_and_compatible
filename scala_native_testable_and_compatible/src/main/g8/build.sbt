@@ -11,7 +11,6 @@ inThisBuild(
   List(
     scalaVersion := scala213,
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3",
-    libraryDependencies += "com.sandinh" %% "scala-rewrites" % "0.1.10-sd",
     scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(
       scalaVersion.value
     ),
@@ -26,24 +25,46 @@ inThisBuild(
 )
 
 lazy val commonSettings = Seq(
-  scalacOptions ++= (Seq("-feature", "-deprecation")
-    ++
-      Seq(
-        "-P:semanticdb:synthetics:on",
-        "-Yrangepos",
-        "-Ywarn-dead-code",
-        "-deprecation",
-        "-feature",
-        "-Wunused"
-        // "-Xfatal-warnings",
-        // "-Ywarn-unused"
-      )
-      ++ sys.env.get("SCALAC_OPTS").getOrElse("").split(" ").toSeq)
+  Compile / scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n == 11 => Seq()
+      case Some((2, n)) if n == 12 => Seq("-Xlint:unused")
+      case Some((2, n)) if n == 13 =>
+        Seq(
+          "-deprecation",
+          "-feature",
+          "-P:semanticdb:synthetics:on",
+          "-Wunused",
+          "-Yrangepos",
+          "-Ywarn-dead-code"
+        )
+    }
+  }
 )
 
 lazy val commonDependencies = Seq(
-  libraryDependencies += "org.scala-lang.modules" %%% "scala-collection-compat" % "2.2.0",
-  libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.2" % Test
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n == 11 =>
+        List(
+          "org.scala-lang.modules" %%% "scala-collection-compat" % "2.2.0",
+          "org.scalatest" %%% "scalatest" % "3.2.2" % Test
+        )
+      case Some((2, n)) if n == 12 =>
+        List(
+          "com.sandinh" %% "scala-rewrites" % "0.1.10-sd",
+          "org.scala-lang.modules" %%% "scala-collection-compat" % "2.2.0",
+          "org.scalatest" %%% "scalatest" % "3.2.2" % Test
+        )
+      case Some((2, n)) if n == 13 =>
+        List(
+          "com.sandinh" %% "scala-rewrites" % "0.1.10-sd",
+          "org.scala-lang.modules" %%% "scala-collection-compat" % "2.2.0",
+          "org.scalatest" %%% "scalatest" % "3.2.2" % Test
+        )
+      case _ => Nil
+    }
+  }
 )
 
 lazy val commonSettingsAndDependencies = commonSettings ++ commonDependencies
