@@ -29,10 +29,13 @@ ENV PATH $PATH:/home/user/bin/sbt/bin
 # Install coursier & scalafmt.
 RUN cd $(mktemp -d) && wget -O ./coursier https://git.io/coursier-cli-linux && chmod +x ./coursier && mv ./coursier /usr/local/bin/coursier && cd -
 RUN coursier install scalafmt
+WORKDIR /root/
+env PATH "${PATH}:/root/.local/share/coursier/bin"
 RUN command -V scalafmt
 
 # Install Conscript & giter8.
 RUN wget -O - -- https://raw.githubusercontent.com/foundweekends/conscript/master/setup.sh | sh
+env PATH "${PATH}:/root/.conscript/bin"
 RUN cs foundweekends/giter8
 
 WORKDIR /home/user/
@@ -42,6 +45,7 @@ RUN find ${PROJECT_NAME} -type d -print0 | xargs -0 rmdir --parents || true
 RUN find ${PROJECT_NAME} | sort -u
 RUN cd ./${PROJECT_NAME} && sbt update
 RUN rm -rf ./${PROJECT_NAME}
+RUN apt-get update && apt-get install --yes parallel
 COPY . .
 RUN make test
 
