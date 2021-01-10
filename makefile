@@ -17,6 +17,7 @@ all: test format clean templates
 format:
 	@echo $(SBT_FILES) $(SCALA_FILES) | parallel --verbose -- eval scalafmt --config './scala_native_testable_and_compatible/src/main/g8/$$name__snake$$/.scalafmt.conf'
 
+# Delete larger folders first.
 clean:
 	find . -iname 'target' -print0 | xargs -0 rm -rf
 	find . -path '*/project/*' -type d -prune -print0 | xargs -0 rm -rf
@@ -25,13 +26,15 @@ clean:
 	find . -iname '.metals' -print0 | xargs -0 rm -rf
 	find . -iname '.bloop' -print0 | xargs -0 rm -rf
 	find . -iname '*.hnir' -print0 | xargs -0 rm -rf
+	find . -iname '*NullaryOverride*' -print0 | xargs -0 rm -rf
 	find . -type d -empty -delete
 
 test:
 	cd $$(mktemp -d) \
         && cp -rf $(ROOT_DIR)/scala_native_testable_and_compatible/src/main/g8 . \
         && { $(HOME)/.conscript/bin/g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; } \
-        && cd $(PROJECT_NAME)_test \
+        && cd $(PROJECT_NAME)_test/$(PROJECT_NAME)_test \
+        && find . -type f | sort -u \
         && sbt '+ test'
 
 templates: $(FINAL_MAKEFILE)
@@ -49,7 +52,7 @@ docker_build:
         -- . \
         1>&2
 
-docker_run:
+docker_run: docker_build
 	docker run \
         --interactive \
         --rm \
@@ -58,7 +61,7 @@ docker_run:
         $(PROJECT_NAME) \
         $(if $(DOCKER_CMD),$(DOCKER_CMD),bash)
 
-docker_test:
+docker_test: docker_build
 	DOCKER_CMD='make test' make docker_run
 
 # --- }}}
