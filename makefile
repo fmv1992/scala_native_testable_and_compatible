@@ -5,8 +5,8 @@ ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 export PROJECT_NAME ?= $(notdir $(ROOT_DIR))
 
 # Find all scala files.
-SBT_FILES := $(shell find $(PROJECT_NAME) -iname "build.sbt")
-SCALA_FILES := $(shell find $(PROJECT_NAME) -iname '*.scala')
+SBT_FILES := $(shell find $(PROJECT_NAME) -iname 'build.sbt' | parallel --pipe --max-args 1 -- parallel --shellquote --shellquote)
+SCALA_FILES := $(shell find $(PROJECT_NAME) -iname '*.scala' | parallel --pipe --max-args 1 -- parallel --shellquote --shellquote)
 
 export _JAVA_OPTIONS ?= -Xms2048m -Xmx4096m
 
@@ -15,11 +15,7 @@ FINAL_MAKEFILE := ./scala_native_testable_and_compatible/src/main/g8/$$if(verbat
 all: test format clean templates
 
 format:
-	# scalafmt --config ./scala_native_testable_and_compatible/src/main/g8/.scalafmt.conf $(SCALA_FILES) $(SBT_FILES)
-	cd ./scala_native_testable_and_compatible/src/main/g8/ \
-    && sed -E 's/ /;scalafixAll /g' <<<'"dependency:fix.scala213.ConstructorProcedureSyntax@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ParensAroundLambda@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.NullaryOverride@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.MultiArgInfix@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.Any2StringAdd@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ExplicitNonNullaryApply@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ExplicitNullaryEtaExpansion@com.sandinh:scala-rewrites:0.1.10-sd"' \
-        | sed -E 's/^/scalafixAll /g' \
-        | xargs --verbose -I % -0 -- sbt '++2.13.3;project crossProjJVM;%'
+	@echo $(SBT_FILES) $(SCALA_FILES) | parallel --verbose -- eval scalafmt --config './scala_native_testable_and_compatible/src/main/g8/$$name__snake$$/.scalafmt.conf'
 
 clean:
 	find . -iname 'target' -print0 | xargs -0 rm -rf
@@ -42,6 +38,30 @@ templates: $(FINAL_MAKEFILE)
 
 $(FINAL_MAKEFILE): scala_native_testable_and_compatible/_makefile
 	sed -E 's/\$$/\\$$/g' < '$<' > '$@'
+
+# Docker actions. --- {{{
+
+docker_build:
+	docker build \
+        --file ./dockerfile \
+        --tag $(PROJECT_NAME) \
+        --build-arg project_name=$(PROJECT_NAME) \
+        -- . \
+        1>&2
+
+docker_run:
+	docker run \
+        --interactive \
+        --rm \
+        --tty \
+        --entrypoint '' \
+        $(PROJECT_NAME) \
+        $(if $(DOCKER_CMD),$(DOCKER_CMD),bash)
+
+docker_test:
+	DOCKER_CMD='make test' make docker_run
+
+# --- }}}
 
 .FORCE:
 
