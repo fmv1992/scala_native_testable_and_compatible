@@ -19,3 +19,17 @@ And that also uses:
 *   [`Scalafix`](https://github.com/scalacenter/scalafix).
 
 *   [`Scalafmt`](https://scalameta.org/scalafmt/).
+
+## Projects using this template
+
+*   [one](https://github.com/fmv1992/one/).
+
+## TODO
+
+*   Add support to docker:
+
+    *   Give support to a readymade `dockerfile`.
+
+    *   Improve existing `makefile` to add support to docker operations.
+
+*   Add `nativelink` standard operation.
