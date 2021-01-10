@@ -10,6 +10,8 @@ SCALA_FILES := $(shell find $(PROJECT_NAME) -iname '*.scala')
 
 export _JAVA_OPTIONS ?= -Xms2048m -Xmx4096m
 
+FINAL_MAKEFILE := ./scala_native_testable_and_compatible/src/main/g8/$$if(verbatim)$$makefile$$endif$$
+
 all: test format clean templates
 
 format:
@@ -36,9 +38,9 @@ test:
         && cd $(PROJECT_NAME)_test \
         && sbt '+ test'
 
-templates: scala_native_testable_and_compatible/src/main/g8/$$if(verbatim)$$makefile$$endif$$
+templates: $(FINAL_MAKEFILE)
 
-scala_native_testable_and_compatible/src/main/g8/$$if(verbatim)$$makefile$$endif$$: scala_native_testable_and_compatible/src/main/g8/.makefile
+$(FINAL_MAKEFILE): scala_native_testable_and_compatible/_makefile
 	sed -E 's/\$$/\\$$/g' < '$<' > '$@'
 
 .FORCE:
