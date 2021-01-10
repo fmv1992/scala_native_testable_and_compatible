@@ -7,15 +7,21 @@ jdk: openjdk8
 scala:
    - 2.12.8
 
+services:
+  - docker
+
 env:
   - PATH="${PATH}:/home/travis/.local/share/coursier/bin"
+
+before_install:
+    - command -V docker
+    - cd $(mktemp -d) && curl -fLo ./coursier https://git.io/coursier-cli-linux && chmod +x ./coursier && sudo mv ./coursier /usr/local/bin/coursier && cd -
+    - coursier install scalafmt
+    - command -V scalafmt
+    - sudo apt-get update && sudo apt-get install --yes parallel
 
 script:
     - make docker_build
     - make docker_test
-
-after_success:
-  - export CODECOV_TOKEN="9837f692-ffac-46db-bc8e-01ef3b9b5b3c"
-  - bash <(curl -s https://codecov.io/bash)
 
 # vim: set filetype=yaml fileformat=unix nowrap:

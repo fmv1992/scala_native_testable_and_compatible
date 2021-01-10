@@ -15,9 +15,9 @@ all: test format clean
 format:
 	scalafmt --config ./$(PROJECT_NAME)/.scalafmt.conf $(SCALA_FILES) $(SBT_FILES)
 	cd ./$(PROJECT_NAME) \
-    && sed -E 's/ /;scalafixAll /g' <<<'"dependency:fix.scala213.ConstructorProcedureSyntax@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ParensAroundLambda@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.NullaryOverride@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.MultiArgInfix@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.Any2StringAdd@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ExplicitNonNullaryApply@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ExplicitNullaryEtaExpansion@com.sandinh:scala-rewrites:0.1.10-sd"' \
-        | sed -E 's/^/scalafixAll /g' \
-        | xargs --verbose -I % -0 -- sbt '++2.13.3;project crossProjJVM;%'
+        && sed -E 's/ /;scalafixAll /g' <<<'"dependency:fix.scala213.ConstructorProcedureSyntax@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ParensAroundLambda@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.NullaryOverride@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.MultiArgInfix@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.Any2StringAdd@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ExplicitNonNullaryApply@com.sandinh:scala-rewrites:0.1.10-sd" "dependency:fix.scala213.ExplicitNullaryEtaExpansion@com.sandinh:scala-rewrites:0.1.10-sd"' \
+            | sed -E 's/^/scalafixAll /g' \
+            | xargs --verbose -I % -0 -- sbt '++2.13.3;project crossProjJVM;%'
 
 clean:
 	find . -iname 'target' -print0 | xargs -0 rm -rf

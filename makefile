@@ -17,6 +17,7 @@ all: test format clean templates
 format:
 	@echo $(SBT_FILES) $(SCALA_FILES) | parallel --verbose -- eval scalafmt --config './scala_native_testable_and_compatible/src/main/g8/$$name__snake$$/.scalafmt.conf'
 
+# Delete larger folders first.
 clean:
 	find . -iname 'target' -print0 | xargs -0 rm -rf
 	find . -path '*/project/*' -type d -prune -print0 | xargs -0 rm -rf
@@ -51,7 +52,7 @@ docker_build:
         -- . \
         1>&2
 
-docker_run:
+docker_run: docker_build
 	docker run \
         --interactive \
         --rm \
@@ -60,7 +61,7 @@ docker_run:
         $(PROJECT_NAME) \
         $(if $(DOCKER_CMD),$(DOCKER_CMD),bash)
 
-docker_test:
+docker_test: docker_build
 	DOCKER_CMD='make test' make docker_run
 
 # --- }}}
