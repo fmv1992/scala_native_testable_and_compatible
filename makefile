@@ -10,7 +10,7 @@ SCALA_FILES := $(shell find $(PROJECT_NAME) -iname '*.scala' | parallel --pipe -
 
 export _JAVA_OPTIONS ?= -Xms2048m -Xmx4096m
 
-FINAL_MAKEFILE := ./scala_native_testable_and_compatible/src/main/g8/$$if(verbatim)$$makefile$$endif$$
+FINAL_MAKEFILE := ./scala_native_testable_and_compatible/src/main/g8/makefile
 
 all: test format clean templates
 
