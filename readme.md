@@ -20,6 +20,25 @@ And that also uses:
 
 *   [`Scalafmt`](https://scalameta.org/scalafmt/).
 
+## Testing
+
+```
+cd ./scala_native_testable_and_compatible.g8/scala_native_testable_and_compatible
+g8 "file://${PWD}/src/main/g8" --name=fmv
+make format test
+```
+
+## Using
+
+Due to not conforming to the [`src layout`](http://www.foundweekends.org/giter8/template.html#src+layout), I recommend the following:
+
+```
+tempfolder=$(mktemp -d)
+git -C ${tempfolder} clone --branch dev --depth 1 https://github.com/fmv1992/scala_native_testable_and_compatible.g8
+g8 "file://${tempfolder}/scala_native_testable_and_compatible.g8/scala_native_testable_and_compatible/src/main/g8"
+rm -rf "${tempfolder}"
+```
+
 ## Projects using this template
 
 *   [one](https://github.com/fmv1992/one/).
