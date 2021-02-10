@@ -12,6 +12,8 @@ inThisBuild(
     scalaVersion := scala213,
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3"
   )
+  // This should include this change:
+  // ???: `git diff 9e27b70e9ccf2a9cfc6d2fb5dace9e04c62f41bd..cc67d0040b4684b4dcb454fd63da4084ef00e587`
 )
 
 lazy val commonSettings = Seq(
@@ -74,6 +76,7 @@ lazy val crossProjectNative: sbt.Project =
 lazy val root: sbt.Project = (project in file("."))
   .settings(
     publish / skip := true,
+    test / skip := true,
     doc / aggregate := false,
     crossScalaVersions := Nil,
     packageDoc / aggregate := false
