@@ -32,7 +32,7 @@ clean:
 test:
 	cd $$(mktemp -d) \
         && cp -rf $(ROOT_DIR)/scala_native_testable_and_compatible/src/main/g8 . \
-        && { $(HOME)/.conscript/bin/g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; } \
+        && { $(HOME)/.local/share/coursier/bin/g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; } \
         && cd $(PROJECT_NAME)_test/$(PROJECT_NAME)_test \
         && sbt '+ test'
 

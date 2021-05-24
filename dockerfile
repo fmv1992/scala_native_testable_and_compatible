@@ -27,16 +27,14 @@ RUN rm sbt.zip
 ENV PATH $PATH:/home/user/bin/sbt/bin
 
 # Install coursier & scalafmt.
-RUN cd $(mktemp -d) && wget -O ./coursier https://git.io/coursier-cli-linux && chmod +x ./coursier && mv ./coursier /usr/local/bin/coursier && cd -
-RUN coursier install scalafmt
+RUN wget --quiet --output-document /tmp/cs https://git.io/coursier-cli-"$(uname | tr LD ld)" && chmod +x /tmp/cs && mv /tmp/cs /bin/cs
+RUN cs install scalafmt
 WORKDIR /root/
-env PATH "${PATH}:/root/.local/share/coursier/bin"
+ENV PATH "${PATH}:/root/.local/share/coursier/bin"
 RUN command -V scalafmt
 
-# Install Conscript & giter8.
-RUN wget -O - -- https://raw.githubusercontent.com/foundweekends/conscript/master/setup.sh | sh
-env PATH "${PATH}:/root/.conscript/bin"
-RUN cs foundweekends/giter8
+# Install giter8.
+RUN cs install giter8
 
 WORKDIR /home/user/
 RUN mkdir ./${PROJECT_NAME}

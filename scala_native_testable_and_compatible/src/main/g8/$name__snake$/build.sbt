@@ -10,7 +10,13 @@ val versionsNative = Seq(scala213)
 inThisBuild(
   List(
     scalaVersion := scala213,
-    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3"
+    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.3",
+    semanticdbEnabled := true,
+    semanticdbOptions += "-P:semanticdb:synthetics:on", // make sure to add this
+    semanticdbVersion := scalafixSemanticdb.revision,
+    scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(
+      scalaVersion.value
+    )
   )
   // This should include this change:
   // ???: `git diff 9e27b70e9ccf2a9cfc6d2fb5dace9e04c62f41bd..cc67d0040b4684b4dcb454fd63da4084ef00e587`
@@ -32,7 +38,7 @@ lazy val commonDependencies = Seq(
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n == 13 =>
         List(
-          "com.sandinh" %% "scala-rewrites" % "0.1.10-sd",
+          "org.scala-lang" %% "scala-rewrites" % "0.1.3",
           "org.scalatest" %%% "scalatest" % "3.2.4-M1" % Test
         )
       case _ => Nil
