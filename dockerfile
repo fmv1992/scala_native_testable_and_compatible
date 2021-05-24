@@ -1,6 +1,6 @@
 # Inspired by `fmv1992_scala_utilities:b42a60f:dockerfile:1`.
 
-FROM ubuntu:18.04@sha256:b58746c8a89938b8c9f5b77de3b8cf1fe78210c696ab03a1442e235eea65d84f
+FROM ubuntu:20.04@sha256:cf31af331f38d1d7158470e095b132acd126a7180a54f263d386da88eb681d93
 
 ARG project_name
 ENV PROJECT_NAME $project_name
