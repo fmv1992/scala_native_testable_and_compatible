@@ -45,6 +45,8 @@ rm -rf "${tempfolder}"
 
 ## TODO
 
+*   Automate `Scala` versioning. Currently we are using `2.13.3` and `2.13.4`.
+
 *   Add support to docker:
 
     *   Give support to a readymade `dockerfile`.
