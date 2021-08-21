@@ -23,9 +23,12 @@ And that also uses:
 ## Testing
 
 ```
-cd ./scala_native_testable_and_compatible.g8/scala_native_testable_and_compatible
+# `cd` to `scala_native_testable_and_compatible`.
+cd ./scala_native_testable_and_compatible
+rm -rf ./fmv
 g8 "file://${PWD}/src/main/g8" --name=fmv
-make format test
+cd ./fmv
+make --file makefile format test
 ```
 
 ## Using
