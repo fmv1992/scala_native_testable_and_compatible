@@ -2,6 +2,8 @@
 
 FROM ubuntu:20.04@sha256:cf31af331f38d1d7158470e095b132acd126a7180a54f263d386da88eb681d93
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 ARG project_name
 ENV PROJECT_NAME $project_name
 
