@@ -32,10 +32,8 @@ clean:
 test:
 	cd $$(mktemp -d) \
         && cp -rf $(ROOT_DIR)/scala_native_testable_and_compatible/src/main/g8 . \
-        && pwd \
         && { g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; } \
         && cd $(PROJECT_NAME)_test/$(PROJECT_NAME)_test \
-        && pwd | tee >(xclip) \
         && sbt '+ test'
 
 templates: $(FINAL_MAKEFILE)
