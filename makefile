@@ -31,12 +31,29 @@ clean:
 	find . -iname '*NullaryOverride*' -print0 | xargs -0 rm -rf
 	find . -type d -empty -delete
 
-test:
-	cd $$(mktemp -d) \
+test_host: test_from_local test_from_remote
+
+test: test_host docker_test
+
+test_from_local:
+	{ set -e ;                                                                   \
+    cd $$(mktemp -d)                                                             \
         && cp -rf $(ROOT_DIR)/scala_native_testable_and_compatible/src/main/g8 . \
-        && { g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; } \
-        && cd $(PROJECT_NAME)_test/$(PROJECT_NAME)_test \
-        && sbt '+ test'
+        && { g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; }      \
+        && cd $(PROJECT_NAME)_test/$(PROJECT_NAME)_test                          \
+        && sbt '+ test' ;                                                        \
+    }
+
+test_from_remote:
+	{ set -e                                                          ; \
+    cd $(mktemp -d)                                                   ; \
+    sbt new fmv1992/scala_native_testable_and_compatible.g8             \
+        --branch dev                                                    \
+        --directory scala_native_testable_and_compatible/src/main/g8    \
+        --name=sntc_test                                              ; \
+    cd ./sntc_test                                                    ; \
+    make --file makefile format test                                  ; \
+    }
 
 templates: $(FINAL_MAKEFILE)
 
