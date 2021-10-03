@@ -38,8 +38,8 @@ test:
 
 templates: $(FINAL_MAKEFILE)
 
-$(FINAL_MAKEFILE): scala_native_testable_and_compatible/_makefile
-	sed -E 's/\$$/\\$$/g' < '$<' > '$@'
+$(FINAL_MAKEFILE): scala_native_testable_and_compatible/_makefile .FORCE
+	sed -E 's/\$$/\$$/g' < '$<' > '$@'
 
 # Docker actions. --- {{{
 
