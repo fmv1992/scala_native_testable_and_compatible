@@ -15,7 +15,9 @@ FINAL_MAKEFILE := ./scala_native_testable_and_compatible/src/main/g8/makefile
 all: test format clean templates
 
 format:
-	@echo $(SBT_FILES) $(SCALA_FILES) | parallel --verbose -- eval scalafmt --config './scala_native_testable_and_compatible/src/main/g8/$$name__snake$$/.scalafmt.conf'
+	find $(PWD) -iname '.scalafmt.conf' -print0 | xargs -I % cp % /tmp/.scalafmt.conf
+	@echo $(SBT_FILES) $(SCALA_FILES) | parallel --verbose -- eval scalafmt --config /tmp/.scalafmt.conf
+	rm /tmp/.scalafmt.conf
 
 # Delete larger folders first.
 clean:
