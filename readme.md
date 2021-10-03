@@ -50,7 +50,15 @@ And that also uses:
 
 *   [one](https://github.com/fmv1992/one/).
 
+## Development best practices
+
+*   Use `docker` for testing.
+
+*   Upload your documentation with [`sbt-ghpages`](https://github.com/sbt/sbt-ghpages).
+
 ## TODO
+
+*   Add [scalacheck](https://github.com/typelevel/scalacheck) integration.
 
 *   Test that `make format test clean` has the exact same files when directory is cloned.
 
