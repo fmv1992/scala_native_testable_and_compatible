@@ -10,7 +10,7 @@ A [giter8](http://www.foundweekends.org/giter8/index.html) project that aims to 
 
 *   [`sbt-crossproject`](https://github.com/portable-scala/sbt-crossproject).
 
-*   The latest version of Scala.
+*   The latest version of Scala (`2.x`).
 
 And that also uses:
 
@@ -20,27 +20,31 @@ And that also uses:
 
 *   [`Scalafmt`](https://scalameta.org/scalafmt/).
 
-## Testing
-
-```
-# `cd` to `scala_native_testable_and_compatible`.
-cd ./scala_native_testable_and_compatible
-rm -rf ./fmv
-g8 "file://${PWD}/src/main/g8" --name=fmv
-cd ./fmv
-make --file makefile format test
-```
-
 ## Using
 
-Due to not conforming to the [`src layout`](http://www.foundweekends.org/giter8/template.html#src+layout), I recommend the following:
+*   From a local clone:
 
-```
-tempfolder=$(mktemp -d)
-git -C ${tempfolder} clone --branch dev --depth 1 https://github.com/fmv1992/scala_native_testable_and_compatible.g8
-g8 "file://${tempfolder}/scala_native_testable_and_compatible.g8/scala_native_testable_and_compatible/src/main/g8"
-rm -rf "${tempfolder}"
-```
+    ```
+    # `cd` to `scala_native_testable_and_compatible`.
+    cd ./scala_native_testable_and_compatible
+    rm -rf ./fmv
+    g8 "file://${PWD}/src/main/g8" --name=fmv
+    cd ./fmv
+    make --file makefile format test
+    ```
+
+*   From the remote:
+
+    ```
+    cd $(mktemp -d)
+    sbt new fmv1992/scala_native_testable_and_compatible.g8 \
+        --branch dev \
+        --directory scala_native_testable_and_compatible/src/main/g8 \
+        --name=sntc_test
+    # This still creates a `./project/` and `./target/` as garbage/by products.
+    cd ./sntc_test
+    make --file makefile format test
+    ```
 
 ## Projects using this template
 
