@@ -31,9 +31,9 @@ clean:
 	find . -iname '*NullaryOverride*' -print0 | xargs -0 rm -rf
 	find . -type d -empty -delete
 
-test_host: test_from_local test_from_remote
-
 test: test_host docker_test
+
+test_host: test_from_local test_from_remote
 
 test_from_local:
 	{ set -e ;                                                                   \
@@ -41,6 +41,7 @@ test_from_local:
         && cp -rf $(ROOT_DIR)/scala_native_testable_and_compatible/src/main/g8 . \
         && { g8 "file://$$(pwd)/g8" --name=$(PROJECT_NAME)_test || true ; }      \
         && cd $(PROJECT_NAME)_test/$(PROJECT_NAME)_test                          \
+        && pwd                                                                   \
         && sbt '+ test' ;                                                        \
     }
 
@@ -51,6 +52,7 @@ test_from_remote:
         --branch dev                                                    \
         --directory scala_native_testable_and_compatible/src/main/g8    \
         --name=sntc_test                                              ; \
+    pwd                                                               ; \
     cd ./sntc_test                                                    ; \
     make --file makefile format test                                  ; \
     }
