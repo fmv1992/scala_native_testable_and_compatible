@@ -3,20 +3,21 @@
 
 # But not these files...
 !*.conf
+!.g8ignore
+!.gitignore
+!.gitkeep
+!makefile
 !*.md
 !*.properties
+!.properties
 !*.py
 !*.sbt
+!.sbt
 !*.scala
 !*.sh
 !*.txt
-!*.vim
-!.gitignore
-!.gitkeep
-!.properties
-!.sbt
-!makefile
 !version
+!*.vim
 # etc...
 
 # ...even if they are in subdirectories
