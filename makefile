@@ -46,8 +46,8 @@ test_from_local:
     }
 
 test_from_remote:
-	{ set -e                                                          ; \
-    cd $(mktemp -d)                                                   ; \
+	{ set -e                                                           ; \
+    cd $$(mktemp -d)                                                   ; \
     sbt new fmv1992/scala_native_testable_and_compatible.g8             \
         --branch dev                                                    \
         --directory scala_native_testable_and_compatible/src/main/g8    \
