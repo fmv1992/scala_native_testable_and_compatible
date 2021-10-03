@@ -82,7 +82,7 @@ docker_run: docker_build
         $(if $(DOCKER_CMD),$(DOCKER_CMD),bash)
 
 docker_test: docker_build
-	DOCKER_CMD='make test' make docker_run
+	DOCKER_CMD='make test_host' make docker_run
 
 # --- }}}
 
